@@ -20,15 +20,7 @@ M.generate_view_table = function(entry, bufnr)
     local helper_lines = M.get_helper_lines()
     local header = M.generate_header(entry)
 
-    local t = {}
-
-    for _, line in ipairs(helper_lines) do
-        table.insert(t, line)
-    end
-
-    for _, line in ipairs(header) do
-        table.insert(t, line)
-    end
+    local t = vim.iter({ helper_lines, header }):flatten(math.huge):totable()
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, t)
     utils.highlighter(bufnr, 'markdown')
