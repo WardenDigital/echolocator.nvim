@@ -14,7 +14,7 @@ return {
     dependencies = {
         "nvim-telescope/telescope.nvim",
     },
-    setup = function()
+    config = function()
         require("echolocator")
     end,
 }
