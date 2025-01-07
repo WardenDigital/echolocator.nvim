@@ -1,7 +1,6 @@
 local utils = require('telescope.previewers.utils')
 
 local M = {
-    padding = 4,
     column_width = 60,
 }
 
@@ -18,13 +17,26 @@ local container_state_icons = {
 --- Generate the view table for the container
 --- @param entry table
 M.generate_view_table = function(entry, bufnr)
-    local view_table = { '```' }
-    view_table = M._add_to_view_table(view_table, M.generate_header(entry))
-    table.insert(view_table, '```')
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, view_table)
+    local helper_lines = M.get_helper_lines()
+    local header = M.generate_header(entry)
+
+    local t = {}
+
+    for _, line in ipairs(helper_lines) do
+        table.insert(t, line)
+    end
+
+    for _, line in ipairs(header) do
+        table.insert(t, line)
+    end
+
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, t)
     utils.highlighter(bufnr, 'markdown')
 end
 
+--- Generate the header for the container
+--- @param entry table
+--- @return table<string>
 M.generate_header = function(entry)
     local header = { '' }
 
@@ -46,20 +58,10 @@ M.generate_header = function(entry)
     return header
 end
 
-M._add_to_view_table = function(view_table, values)
-    view_table = view_table or {}
-
-    local t = M._get_helper_lines()
-
-    for _, value in ipairs(values) do
-        table.insert(t, value)
-    end
-
-    return t
-end
-
-M._get_helper_lines = function()
-    local lines = {
+--- Get the helper lines for the container
+--- @return table<string>
+M.get_helper_lines = function()
+    return {
         '',
         '# (`s`) for `start/stop` | (`r`) for `restart` | (`d`) for `delete`',
         '',
@@ -67,11 +69,8 @@ M._get_helper_lines = function()
         '',
         '# (`Enter` | `<CR>`) for `ssh`',
         '',
+        string.rep('', 80, '-'),
     }
-
-    table.insert(lines, string.rep('', 80, '-'))
-
-    return lines
 end
 
 return M
