@@ -1,4 +1,4 @@
-# This is a plugin for interracting with docker. 
+# This is a plugin for interacting with docker. 
 Currently there is a limited functionality with docker containers. Plugin is under construction.
 It might be converted into telescope extension in the future.
 
